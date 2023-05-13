@@ -1,5 +1,7 @@
 # logfusc
 
+![A family of gophers riding a log down a river](images/logging-gophers.jpg)
+
 Instrument your codebase with confidence. logfusc is a Go library that makes
 redacting sensitive data from logs and traces simple. Stop scrubbing logs in the
 aftermath of preventable human errors. Make your secrets **unloggable** instead.
