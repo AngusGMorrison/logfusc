@@ -37,7 +37,7 @@ fmt.Printf("%x\n", secret)
 // => 6c6f67667573632e5365637265745b737472696e675d7b52454441435445447d == logfusc.Secret[string]{REDACTED}
 ```
 
-### Log with reckless abandon
+### Log anything, anywhere
 
 `logfusc.Secret` redacts your secrets when marshaled to a variety of formats, so
 you can pass complete structs to your logger without worrying about leaking
@@ -62,7 +62,7 @@ log.Println(string(b))
 ```
 
 So far, `Secret` satisfies:
-- `json.Marshaler`
+- `json.Marshaler` (tested with both `encoding/json` and [json-iterator](https://github.com/json-iterator/go))
 - More coming soon! Too slow for you? Why not contribute?
 
 ### Decode directly to logfusc.Secret
@@ -88,14 +88,16 @@ log.Println(secret.Expose())
 
 ## Compatibility
 
-`logfusc.Secret` is tested and known to redact its contents from the following
-loggers:
+`logfusc.Secret` should work as described with all sane logging libraries.
+
+"Should" because, in Go, you _can_ technically access the private fields of a
+struct using a combination of the `reflect` and `unsafe` packages. If your
+logger is doing this, you need a new one.
+
+For your peace of mind, though, `logfusc.Secret` has been explicitly tested for
+compatibility with the following loggers:
 - `log`
+- `logrus`
+- `zap`
+- `zerolog`
 - More compatibility tests coming soon! Too slow for you? Why not contribute?
-
-## Caveats
-
-`logfusc` won't protect your secrets from third-party code that really digs for
-them. In Go, you can access the private fields of a struct using a combination
-of the `reflect` and `unsafe` packages. But if your telemetry package is doing
-that, then you should probably find another one...
