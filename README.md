@@ -44,19 +44,19 @@ you can pass complete structs to your logger without worrying about leaking
 sensitive data. No more manual redaction. No configuration. No leaks.
 
 ```go
-type User struct {
-    Name     string `json:"name"`
+type Universe struct {
     SecretOfLife logfusc.Secret[int] `json:"secret_of_life"`
 }
 
-user := User{
-    Name:     "alice",
-    SecretOfLife: logfusc.NewSecret(42),
+func main() {
+  universe := Universe{
+      SecretOfLife: logfusc.NewSecret(42),
+  }
+
+  b, _ := json.Marshal(universe)
+
+  log.Println(string(b))
 }
-
-b, _ := json.Marshal(user)
-
-log.Println(string(b))
 
 // => {"name":"alice","secret_of_life":"logfusc.Secret[int]{REDACTED}"}
 ```
@@ -67,7 +67,25 @@ So far, `Secret` satisfies:
 
 ### Decode directly to logfusc.Secret
 
-Protect secrets at the boundaries of your service by decoding them directly into `logfusc.Secret`.
+Protect secrets at the boundaries of your service by decoding them directly into
+`logfusc.Secret`.
+
+```go
+type RegisterRequest struct {
+  Email string `json:"email"`
+  Password logfusc.Secret[string] `json:"password"`
+}
+
+func Register(w http.ResponseWriter, r *http.Request) {
+  var req RegisterRequest
+  _ = json.NewDecoder(r.Body).Decode(&req)
+  fmt.Println(req.Password)
+  fmt.Println(req.Password.Expose())
+}
+
+// => logfusc.Secret[string]{REDACTED}
+//    password
+```
 
 So far, `Secret` satisfies:
 - `json.Unmarshaler`
