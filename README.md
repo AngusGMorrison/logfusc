@@ -16,7 +16,7 @@ you try to format it, it doesn't give up its secret.
 
 ```go
 password := "do not log!"
-secret := logfusc.Secret(password)
+secret := logfusc.NewSecret(password)
 
 fmt.Printf("%s\n", secret)
 // => logfusc.Secret[string]{REDACTED}
