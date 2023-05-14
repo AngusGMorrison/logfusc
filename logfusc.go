@@ -34,8 +34,8 @@ func NewSecret[T any](value T) Secret[T] {
 	return Secret[T]{value}
 }
 
-// String renders the Secret and its contents in the format `REDACTED T`, where
-// T is the type of the obfuscated value.
+// String renders the Secret and its contents in the format
+// `logfusc.Secret[T]{REDACTED}`, where T is the type of the obfuscated value.
 func (s Secret[_]) String() string {
 	return fmt.Sprintf(redactionTmpl, s.value)
 }

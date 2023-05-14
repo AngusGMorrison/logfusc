@@ -1,10 +1,14 @@
 # logfusc – surefire secret redaction for logs and traces
 
+[![Go
+Reference](https://pkg.go.dev/badge/github.com/angusgmorrison/logfusc.svg)](https://pkg.go.dev/github.com/angusgmorrison/logfusc) ![CI](https://github.com/AngusGMorrison/logfusc/actions/workflows/vet.yml/badge.svg)
+
 Instrument your codebase with confidence. logfusc is a Go library that makes
 redacting sensitive data from logs and traces simple. Stop scrubbing logs in the
 aftermath of preventable human errors. Make your secrets **unloggable**.
 
 ![A family of gophers riding a log down a river](images/logging-gophers.jpg)
+
 
 ## logfusc.Secret
 
@@ -93,7 +97,7 @@ So far, `Secret` satisfies:
 
 ### Use secrets with intention
 
-Secret encourages you to log often and trace **everything** in the knowledge
+`Secret` encourages you to log often and trace **everything** in the knowledge
 that your secrets are safe. That doesn't stop you working with sensitive data,
 but you have to do it *deliberately*.
 
