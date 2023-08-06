@@ -97,8 +97,8 @@ So far, `Secret` satisfies:
 
 ### Use secrets with intention
 
-`Secret` encourages you to log often and trace **everything** in the knowledge
-that your secrets are safe. That doesn't stop you working with sensitive data,
+`Secret` encourages you to log often and trace **everything** in the knowledge that
+your secrets are safe. That doesn't stop you working with sensitive data,
 but you have to do it *deliberately*.
 
 ```go
@@ -110,11 +110,8 @@ log.Println(secret.Expose())
 
 ## Compatibility
 
-`logfusc.Secret` should work as described with all sane logging libraries.
-
-"Should" because, in Go, you _can_ technically access the private fields of a
-struct using a combination of the `reflect` and `unsafe` packages. If your
-logger is doing this, you need a new one.
+When logged as a standalone object or as an exported struct field,
+`logfusc.Secret` will work as described with all sane logging libraries.
 
 For your peace of mind, `logfusc.Secret` has been explicitly tested for
 compatibility with the following loggers:
@@ -123,3 +120,20 @@ compatibility with the following loggers:
 - `zap`
 - `zerolog`
 - More compatibility tests coming soon! Too slow for you? Why not contribute?
+
+### ⚠️ Caution ⚠️
+The standard library `fmt` package and any third-party packages that use reflection
+to deeply print structs __DO NOT__ respect `fmt.Stringer` or `fmt.GoStringer`
+implementations for unexported struct fields.
+
+If a `logfusc.Secret` is logged as part of a struct with unexported fields, it
+__will__ be logged in plain text.
+
+Alternatively:
+* Use `logfusc.Secret` only in exported struct fields.
+* Define custom `fmt.Stringer` and `fmt.GoStringer` implementations for structs
+  that contain unexported `logfusc.Secret` fields, invoking `Secret.String()` or
+  `Secret.GoString()` manually for these fields.
+* Use [go-spew](https://github.com/davecgh/go-spew) instead of `fmt`, which deeply prints structs without reflection,
+  respecting `fmt.Stringer` and `fmt.GoStringer` implementations for unexported
+  fields.
